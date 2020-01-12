@@ -40,7 +40,9 @@ $("#form-submit").on("click", function(event) {
   $("#destination").val("");
   $("#train-time").val("");
   $("#frequency").val("");
+
   rowCounter++;
+
   database.ref().push({
     trainName: trainName,
     destination: destination,
@@ -48,3 +50,37 @@ $("#form-submit").on("click", function(event) {
     frequency: frequency,
   });
 });
+
+database.ref().on("child_added", function(childSnapShot) {
+  console.log("---child snapshot---");
+  console.log(childSnapShot.val().trainName);
+  console.log(childSnapShot.val().destination);
+  console.log(childSnapShot.val().startTime);
+  console.log(childSnapShot.val().frequency);
+  console.log("---child snapshot---");
+
+  var correctedTime = moment(childSnapShot.val().startTime, "hh:mm A");
+
+  var differenceOfTime = moment().diff(moment(correctedTime), "minutes");
+
+  var remainderTime = differenceOfTime % childSnapShot.val().frequency;
+
+  var arrivalTime = childSnapShot.val().frequency - remainderTime;
+
+  var tableRow = `
+  <tr>
+<td>${childSnapShot.val().trainName}</td>
+<td>${childSnapShot.val().destination}</td>
+<td>${childSnapShot.val().startTime}</td>
+<td>${childSnapShot.val().frequency} min</td>
+<td>${arrivalTime} min</td>
+</tr>
+`;
+  $("#tablebody").append(tableRow);
+});
+
+function deleteRow() {
+  $(this).remove();
+}
+
+$(document).on("click", "tr", deleteRow);
