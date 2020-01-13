@@ -10,3 +10,29 @@
 #remove-row {
   background-color: #f55a1f;
 }
+
+#modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#modal-content {
+  display: none;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888888;
+  width: 30%;
+  opacity: 1;
+}
+
+#delete-row {
+  background-color: #dc3545;
+}
