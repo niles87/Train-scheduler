@@ -71,7 +71,7 @@ $("#delete-row").on("click", function() {
 });
 
 database.ref().on("child_added", function(childSnapShot) {
-  var correctedTime = moment(childSnapShot.val().startTime, "hh:mm A");
+  var correctedTime = moment(childSnapShot.val().startTime, "hh:mm");
 
   var differenceOfTime = moment().diff(moment(correctedTime), "minutes");
 
@@ -84,15 +84,15 @@ database.ref().on("child_added", function(childSnapShot) {
   var nextTrainTime = moment(nextTrainArrival).format("hh:mm A");
 
   var tableRow = `
-  <tr>
-  <th><input type="checkbox" class="checkbox" data-id="${childSnapShot.key}"></th>
- <td>${childSnapShot.val().trainName}</td>
- <td>${childSnapShot.val().destination}</td>
- <td>${childSnapShot.val().frequency} min</td>
- <td>${childSnapShot.val().startTime}</td>
- <td>${nextTrainTime}</td>
- <td>${arrivalMinutes} min</td>
- </tr>
- `;
+                  <tr>
+                  <th><input type="checkbox" class="checkbox" data-id="${childSnapShot.key}"></th>
+                  <td>${childSnapShot.val().trainName}</td>
+                  <td>${childSnapShot.val().destination}</td>
+                  <td>${childSnapShot.val().frequency} min</td>
+                  <td>${childSnapShot.val().startTime}</td>
+                  <td>${nextTrainTime}</td>
+                  <td>${arrivalMinutes} min</td>
+                  </tr>
+                `;
   $("#tablebody").append(tableRow);
 });
