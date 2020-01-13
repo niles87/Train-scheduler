@@ -50,26 +50,27 @@ $("#form-submit").on("click", function(event) {
     frequency: frequency,
   });
 });
-// $('#myModal').on('shown.bs.modal', function () {
-//   $('#myInput').trigger('focus')
-// })
-// $(document).on("click", ".checkbox", function() {
-//   var deleteNode = $(this).attr("data-id");
-//   console.log(deleteNode);
-//   console.log(typeof deleteNode);
 
-//   database.ref(deleteNode).remove();
-// });
+$(document).on("click", ".checkbox", function() {
+  deleteNode = $(this).attr("data-id");
+  $("#modal").css("display", "block");
+  $("#modal-content").css("display", "block");
+});
+
+$("#close").on("click", function() {
+  $("#modal").css("display", "none");
+  $("#modal-content").css("display", "none");
+  $(".checkbox").prop("checked", false);
+});
+
+$("#delete-row").on("click", function() {
+  $("#modal").css("display", "none");
+  $("#modal-content").css("display", "none");
+  database.ref(deleteNode).remove();
+  location.reload();
+});
 
 database.ref().on("child_added", function(childSnapShot) {
-  // console.log("---child snapshot---");
-  // console.log(childSnapShot);
-  // console.log(childSnapShot.val().trainName);
-  // console.log(childSnapShot.val().destination);
-  // console.log(childSnapShot.val().startTime);
-  // console.log(childSnapShot.val().frequency);
-  // console.log("---child snapshot---");
-
   var correctedTime = moment(childSnapShot.val().startTime, "hh:mm A");
 
   var differenceOfTime = moment().diff(moment(correctedTime), "minutes");
