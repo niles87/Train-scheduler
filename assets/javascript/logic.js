@@ -50,14 +50,25 @@ $("#form-submit").on("click", function(event) {
     frequency: frequency,
   });
 });
+// $('#myModal').on('shown.bs.modal', function () {
+//   $('#myInput').trigger('focus')
+// })
+// $(document).on("click", ".checkbox", function() {
+//   var deleteNode = $(this).attr("data-id");
+//   console.log(deleteNode);
+//   console.log(typeof deleteNode);
+
+//   database.ref(deleteNode).remove();
+// });
 
 database.ref().on("child_added", function(childSnapShot) {
-  console.log("---child snapshot---");
-  console.log(childSnapShot.val().trainName);
-  console.log(childSnapShot.val().destination);
-  console.log(childSnapShot.val().startTime);
-  console.log(childSnapShot.val().frequency);
-  console.log("---child snapshot---");
+  // console.log("---child snapshot---");
+  // console.log(childSnapShot);
+  // console.log(childSnapShot.val().trainName);
+  // console.log(childSnapShot.val().destination);
+  // console.log(childSnapShot.val().startTime);
+  // console.log(childSnapShot.val().frequency);
+  // console.log("---child snapshot---");
 
   var correctedTime = moment(childSnapShot.val().startTime, "hh:mm A");
 
@@ -73,13 +84,14 @@ database.ref().on("child_added", function(childSnapShot) {
 
   var tableRow = `
   <tr>
-<td>${childSnapShot.val().trainName}</td>
-<td>${childSnapShot.val().destination}</td>
-<td>${childSnapShot.val().frequency} min</td>
-<td>${childSnapShot.val().startTime}</td>
-<td>${nextTrainTime}</td>
-<td>${arrivalMinutes} min</td>
-</tr>
-`;
+  <th><input type="checkbox" class="checkbox" data-id="${childSnapShot.key}"></th>
+ <td>${childSnapShot.val().trainName}</td>
+ <td>${childSnapShot.val().destination}</td>
+ <td>${childSnapShot.val().frequency} min</td>
+ <td>${childSnapShot.val().startTime}</td>
+ <td>${nextTrainTime}</td>
+ <td>${arrivalMinutes} min</td>
+ </tr>
+ `;
   $("#tablebody").append(tableRow);
 });
