@@ -65,22 +65,21 @@ database.ref().on("child_added", function(childSnapShot) {
 
   var remainderTime = differenceOfTime % childSnapShot.val().frequency;
 
-  var arrivalTime = childSnapShot.val().frequency - remainderTime;
+  var arrivalMinutes = childSnapShot.val().frequency - remainderTime;
+
+  var nextTrainArrival = moment().add(arrivalMinutes, "minutes");
+
+  var nextTrainTime = moment(nextTrainArrival).format("hh:mm A");
 
   var tableRow = `
   <tr>
 <td>${childSnapShot.val().trainName}</td>
 <td>${childSnapShot.val().destination}</td>
-<td>${childSnapShot.val().startTime}</td>
 <td>${childSnapShot.val().frequency} min</td>
-<td>${arrivalTime} min</td>
+<td>${childSnapShot.val().startTime}</td>
+<td>${nextTrainTime}</td>
+<td>${arrivalMinutes} min</td>
 </tr>
 `;
   $("#tablebody").append(tableRow);
 });
-
-function deleteRow() {
-  $(this).remove();
-}
-
-$(document).on("click", "tr", deleteRow);
