@@ -3,9 +3,14 @@
 }
 #saved-trains {
   background-color: #f9b927;
+  color: #1d428a;
 }
 #new-trains {
   background-color: #104438;
+  color: #efb11d;
+}
+#jumbo-title {
+  color: #ffffff;
 }
 #remove-row {
   background-color: #f55a1f;
