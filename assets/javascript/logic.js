@@ -13,13 +13,15 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+// initial variables
 var trainName = "";
 var destination = "";
 var time = "";
 var frequency = "";
-var database = firebase.database();
-var rowCounter = 0;
 
+var database = firebase.database();
+
+// form submit event
 $("#form-submit").on("click", function(event) {
   event.preventDefault();
 
@@ -41,8 +43,6 @@ $("#form-submit").on("click", function(event) {
   $("#train-time").val("");
   $("#frequency").val("");
 
-  rowCounter++;
-
   database.ref().push({
     trainName: trainName,
     destination: destination,
@@ -51,48 +51,54 @@ $("#form-submit").on("click", function(event) {
   });
 });
 
+// checkbox event listener to show modal
 $(document).on("click", ".checkbox", function() {
   deleteNode = $(this).attr("data-id");
   $("#modal").css("display", "block");
   $("#modal-content").css("display", "block");
 });
 
+// modal close button event listener
 $("#close").on("click", function() {
   $("#modal").css("display", "none");
   $("#modal-content").css("display", "none");
   $(".checkbox").prop("checked", false);
 });
 
+// modal delete button event listener
 $("#delete-row").on("click", function() {
   $("#modal").css("display", "none");
   $("#modal-content").css("display", "none");
   database.ref(deleteNode).remove();
-  location.reload();
 });
 
-database.ref().on("child_added", function(childSnapShot) {
-  var correctedTime = moment(childSnapShot.val().startTime, "hh:mm");
+// firebase value change event listener
+database.ref().on("value", function(snap) {
+  $("#tablebody").empty();
+  snap.forEach(function(childSnapShot) {
+    var correctedTime = moment(childSnapShot.val().startTime, "hh:mm");
 
-  var differenceOfTime = moment().diff(moment(correctedTime), "minutes");
+    var differenceOfTime = moment().diff(moment(correctedTime), "minutes");
 
-  var remainderTime = differenceOfTime % childSnapShot.val().frequency;
+    var remainderTime = differenceOfTime % childSnapShot.val().frequency;
 
-  var arrivalMinutes = childSnapShot.val().frequency - remainderTime;
+    var arrivalMinutes = childSnapShot.val().frequency - remainderTime;
 
-  var nextTrainArrival = moment().add(arrivalMinutes, "minutes");
+    var nextTrainArrival = moment().add(arrivalMinutes, "minutes");
 
-  var nextTrainTime = moment(nextTrainArrival).format("hh:mm A");
+    var nextTrainTime = moment(nextTrainArrival).format("hh:mm A");
 
-  var tableRow = `
-                  <tr>
-                  <th><input type="checkbox" class="checkbox" data-id="${childSnapShot.key}"></th>
-                  <td>${childSnapShot.val().trainName}</td>
-                  <td>${childSnapShot.val().destination}</td>
-                  <td>${childSnapShot.val().frequency} min</td>
-                  <td>${childSnapShot.val().startTime}</td>
-                  <td>${nextTrainTime}</td>
-                  <td>${arrivalMinutes} min</td>
-                  </tr>
-                `;
-  $("#tablebody").append(tableRow);
+    var tableRow = `
+                    <tr>
+                    <th><input type="checkbox" class="checkbox" data-id="${childSnapShot.key}"></th>
+                    <td>${childSnapShot.val().trainName}</td>
+                    <td>${childSnapShot.val().destination}</td>
+                    <td>${childSnapShot.val().frequency} min</td>
+                    <td>${childSnapShot.val().startTime}</td>
+                    <td>${nextTrainTime}</td>
+                    <td>${arrivalMinutes} min</td>
+                    </tr>
+                  `;
+    $("#tablebody").append(tableRow);
+  });
 });
